@@ -1,0 +1,10 @@
+{
+  "name": "vercel-ejc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mini sistema de confirmacao de cadastro com codigos pre-gerados para deploy no Vercel.",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  }
+}

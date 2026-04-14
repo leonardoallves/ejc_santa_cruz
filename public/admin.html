@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel de Confirmacoes EJC</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Painel administrativo</p>
+        <h1>Consultar confirmacoes</h1>
+        <p class="hero-text">
+          Informe o token administrativo para visualizar os cadastros
+          confirmados.
+        </p>
+
+        <form id="admin-form" class="stack">
+          <label for="admin-token">Token administrativo</label>
+          <div class="inline-form">
+            <input
+              id="admin-token"
+              name="token"
+              type="password"
+              placeholder="Seu ADMIN_TOKEN"
+              required
+            />
+            <button type="submit">Carregar</button>
+          </div>
+        </form>
+
+        <div id="admin-feedback" class="feedback" aria-live="polite"></div>
+      </section>
+
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Confirmacoes</h2>
+          <span id="admin-summary" class="muted">Nenhum dado carregado.</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Codigo</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Grupo</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody id="confirmations-body">
+              <tr>
+                <td colspan="6" class="empty-state">Aguardando consulta.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/admin.js"></script>
+  </body>
+</html>
