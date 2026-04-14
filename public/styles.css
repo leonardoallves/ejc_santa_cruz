@@ -65,6 +65,7 @@ body::before {
   content: "";
   position: absolute;
   inset: 0;
+  pointer-events: none;
   border-radius: inherit;
   padding: 1px;
   background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(159,79,32,0.22));
