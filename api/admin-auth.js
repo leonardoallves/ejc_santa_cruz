@@ -14,6 +14,12 @@ module.exports = async function handler(request, response) {
   }
 
   if (request.method === "POST") {
+    if (!process.env.ADMIN_PASSWORD) {
+      return sendJson(response, 500, {
+        error: "ADMIN_PASSWORD nao configurada."
+      });
+    }
+
     const body = readJsonBody(request);
     const password = String(body.password || "");
 

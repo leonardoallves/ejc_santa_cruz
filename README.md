@@ -4,11 +4,12 @@ Projeto enxuto para deploy na Vercel com:
 
 - validacao por codigo unico
 - formulario de inscricao com foto
-- armazenamento principal em JSON no Vercel Blob
 - painel administrativo protegido por senha
 - sincronizacao opcional com Notion
+- suporte a armazenamento local para desenvolvimento
+- suporte a Vercel Blob para producao
 
-## Como rodar
+## Como rodar localmente
 
 1. Instale as dependencias:
 
@@ -16,29 +17,39 @@ Projeto enxuto para deploy na Vercel com:
 npm install
 ```
 
-2. Crie um arquivo `.env` com base em `.env.example`.
+2. O projeto ja esta com um `.env` local configurado para desenvolvimento.
 
-3. Rode localmente:
+3. Rode:
 
 ```bash
 npm run dev
 ```
 
-## Como configurar Vercel Blob
+4. Acesse:
 
-1. No projeto da Vercel, crie um Blob Store.
-2. Copie o token de escrita para `BLOB_READ_WRITE_TOKEN`.
-3. Faça um novo deploy depois de salvar a variavel.
+- `/` para a inscricao publica
+- `/admin` para o painel administrativo
 
-Os arquivos ficam organizados assim:
+## Credenciais locais
 
-- `codes/` arquivos JSON dos codigos
-- `registrations/` arquivos JSON das inscricoes
-- `photos/` fotografias enviadas
+Para o ambiente local atual:
+
+```env
+STORAGE_PROVIDER=local
+ADMIN_PASSWORD=EJC2026Admin!
+SESSION_SECRET=ejc-local-session-2026-secret
+```
+
+Nesse modo:
+
+- codigos e inscricoes ficam em `data/.local-storage`
+- nao precisa de `BLOB_READ_WRITE_TOKEN`
+- fotos ficam salvas inline no JSON apenas para testes locais
 
 ## Variaveis de ambiente
 
 ```env
+STORAGE_PROVIDER=local
 BLOB_READ_WRITE_TOKEN=
 ADMIN_PASSWORD=
 SESSION_SECRET=
@@ -48,23 +59,30 @@ NOTION_DATA_SOURCE_ID=
 
 `NOTION_API_KEY` e `NOTION_DATA_SOURCE_ID` sao opcionais.
 
+## Deploy na Vercel
+
+Para deploy real na Vercel:
+
+1. Crie um Blob Store no projeto.
+2. Configure `BLOB_READ_WRITE_TOKEN`.
+3. Configure `ADMIN_PASSWORD`.
+4. Configure `SESSION_SECRET`.
+5. Nao use `STORAGE_PROVIDER=local` no ambiente da Vercel.
+6. Faca um novo deploy.
+
+Os arquivos no Blob ficam organizados assim:
+
+- `codes/` arquivos JSON dos codigos
+- `registrations/` arquivos JSON das inscricoes
+- `photos/` fotografias enviadas
+
 ## Como entrar no admin
 
-1. Configure `ADMIN_PASSWORD`.
-2. Acesse `/admin`.
-3. Informe a senha.
+1. Acesse `/admin`.
+2. Informe a `ADMIN_PASSWORD`.
+3. Crie ou gere codigos.
 
-Depois do login, a sessao fica em cookie seguro assinado no servidor.
-
-## Como criar um codigo
-
-No painel `/admin` voce pode:
-
-- digitar manualmente um codigo de ate 8 caracteres alfanumericos
-- usar o botao `Gerar codigo`
-- desativar um codigo ainda nao utilizado
-
-Um codigo so deixa de estar disponivel depois que a inscricao e salva com sucesso.
+Um codigo deixa de estar disponivel depois que a inscricao e salva com sucesso.
 
 ## Alterando os campos da inscricao
 
@@ -78,10 +96,6 @@ Ali voce pode alterar:
 - lista de campos do formulario
 - obrigatoriedade, label, placeholder e maxLength de cada campo
 
-Na maioria dos casos, basta editar:
-
-- `data/registration-config.js`
-
 Se quiser mudar comportamento visual do admin ou da pagina publica:
 
 - `public/script.js`
@@ -90,7 +104,7 @@ Se quiser mudar comportamento visual do admin ou da pagina publica:
 
 ## Como configurar o Notion
 
-A integracao e opcional e acontece depois que a inscricao ja foi salva no Blob.
+A integracao e opcional e acontece depois que a inscricao ja foi salva.
 
 1. Crie uma integracao interna no Notion e copie a chave para `NOTION_API_KEY`.
 2. Crie uma base e copie o data source id para `NOTION_DATA_SOURCE_ID`.
@@ -106,23 +120,24 @@ A integracao e opcional e acontece depois que a inscricao ja foi salva no Blob.
    - `Foto` como url
    - `Observacoes` como rich text
 
-Se o Notion falhar, a inscricao continua salva normalmente no Blob.
-
-## Como fazer deploy na Vercel
-
-1. Suba o repositorio para o Git.
-2. Importe o projeto na Vercel.
-3. Configure as variaveis de ambiente.
-4. Faça o deploy.
+Se o Notion falhar, a inscricao continua salva normalmente.
 
 ## Rotas principais
 
 - `/` tela publica de inscricao
 - `/admin` painel administrativo
+- `GET /api/registration-config`
 - `POST /api/validate-code`
 - `POST /api/register`
+- `GET /api/admin-auth`
+- `POST /api/admin-auth`
+- `DELETE /api/admin-auth`
 - `GET /api/admin-codes`
+- `POST /api/admin-codes`
+- `PATCH /api/admin-code`
 - `GET /api/admin-registrations`
+- `GET /api/admin-registration`
+- `GET /api/admin-export`
 
 ## Gerar lista de codigos fora do painel
 
