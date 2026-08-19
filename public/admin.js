@@ -215,7 +215,7 @@ async function loadAdminData() {
 }
 
 async function loadSession() {
-  const session = await fetchJson("/api/admin-session", {
+  const session = await fetchJson("/api/admin-auth", {
     method: "GET"
   });
 
@@ -242,7 +242,7 @@ loginForm.addEventListener("submit", async (event) => {
   setFeedback("", "");
 
   try {
-    await fetchJson("/api/admin-login", {
+    await fetchJson("/api/admin-auth", {
       method: "POST",
       body: JSON.stringify({ password })
     });
@@ -316,9 +316,8 @@ downloadRegistrationButton.addEventListener("click", () => {
 
 logoutButton.addEventListener("click", async () => {
   try {
-    await fetchJson("/api/admin-logout", {
-      method: "POST",
-      body: JSON.stringify({})
+    await fetchJson("/api/admin-auth", {
+      method: "DELETE"
     });
 
     adminContent.classList.add("hidden");
