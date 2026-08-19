@@ -3,31 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Confirmacao de Cadastro EJC</title>
+    <title>Inscricao EJC</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <main class="page-shell">
       <section class="hero-card">
-        <p class="eyebrow">EJC 2026</p>
-        <h1>Confirme seu cadastro com o codigo recebido</h1>
-        <p class="hero-text">
-          Digite o codigo pre-gerado que voce recebeu para liberar o formulario
-          de confirmacao.
+        <p id="page-eyebrow" class="eyebrow">EJC 2026</p>
+        <h1 id="page-heading">Informe seu codigo para liberar a inscricao</h1>
+        <p id="page-description" class="hero-text">
+          Digite o codigo recebido do administrador.
         </p>
 
         <form id="code-form" class="stack">
-          <label for="code">Codigo de confirmacao</label>
+          <label id="code-label" for="code">Codigo</label>
           <div class="inline-form">
-            <input
-              id="code"
-              name="code"
-              type="text"
-              placeholder="Ex.: EJC-2026-001"
-              autocomplete="off"
-              required
-            />
-            <button type="submit">Validar codigo</button>
+            <input id="code" name="code" type="text" autocomplete="off" required />
+            <button id="code-button" type="submit">Continuar</button>
           </div>
         </form>
 
@@ -36,32 +28,19 @@
 
       <section id="registration-card" class="form-card hidden">
         <div class="invite-summary">
-          <p class="eyebrow">Cadastro liberado</p>
-          <h2 id="invite-holder">Participante</h2>
-          <p id="invite-group" class="muted"></p>
+          <p class="eyebrow">Formulario liberado</p>
+          <h2>Conclua sua inscricao</h2>
+          <p id="validated-code" class="muted"></p>
         </div>
 
         <form id="registration-form" class="stack">
-          <input id="confirmed-code" name="confirmedCode" type="hidden" />
+          <div id="registration-fields" class="stack"></div>
 
-          <label for="name">Nome completo</label>
-          <input id="name" name="name" type="text" required />
+          <div id="photo-preview-wrap" class="photo-preview hidden">
+            <img id="photo-preview-image" alt="Preview da foto selecionada" />
+          </div>
 
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" required />
-
-          <label for="phone">Telefone</label>
-          <input id="phone" name="phone" type="tel" required />
-
-          <label for="notes">Observacoes</label>
-          <textarea
-            id="notes"
-            name="notes"
-            rows="4"
-            placeholder="Se quiser, informe algum detalhe importante."
-          ></textarea>
-
-          <button type="submit">Confirmar cadastro</button>
+          <button id="registration-button" type="submit">Concluir inscricao</button>
         </form>
 
         <div id="registration-feedback" class="feedback" aria-live="polite"></div>

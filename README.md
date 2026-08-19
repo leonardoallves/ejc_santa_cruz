@@ -1,63 +1,131 @@
-# Mini sistema de cadastro EJC
+# Sistema de inscricoes EJC
 
-Projeto simples para deploy no Vercel com:
+Projeto enxuto para deploy na Vercel com:
 
-- validacao por codigo pre-gerado
-- confirmacao de cadastro
-- painel administrativo protegido por token
-- persistencia em Vercel KV quando configurado
+- validacao por codigo unico
+- formulario de inscricao com foto
+- armazenamento principal em JSON no Vercel Blob
+- painel administrativo protegido por senha
+- sincronizacao opcional com Notion
 
-## Observacao importante
+## Como rodar
 
-Sem `KV_REST_API_URL` e `KV_REST_API_TOKEN`, as confirmacoes ficam apenas em memoria.
-Isso serve para teste local, mas nao e adequado para producao no Vercel porque os dados
-podem se perder a cada reinicio da funcao.
+1. Instale as dependencias:
 
-## Como funciona
+```bash
+npm install
+```
 
-1. Edite os codigos em `data/invite-codes.js`.
-2. Configure `ADMIN_TOKEN` nas variaveis de ambiente do Vercel.
-3. Se quiser persistencia real, configure `KV_REST_API_URL` e `KV_REST_API_TOKEN`.
-4. Faça o deploy no Vercel.
+2. Crie um arquivo `.env` com base em `.env.example`.
 
-## Estrutura
+3. Rode localmente:
 
-- `public/` paginas, scripts e estilos do frontend
-- `api/` funcoes serverless
-- `data/` codigos pre-gerados
-- `lib/` utilitarios compartilhados
-- `scripts/` scripts auxiliares
+```bash
+npm run dev
+```
 
-## Deploy no Vercel
+## Como configurar Vercel Blob
 
-1. Suba a pasta em um repositorio Git.
-2. Importe o repositorio no painel da Vercel.
-3. Em `Settings > Environment Variables`, cadastre:
-   - `ADMIN_TOKEN`
-   - `KV_REST_API_URL`
-   - `KV_REST_API_TOKEN`
-4. Faça um novo deploy.
+1. No projeto da Vercel, crie um Blob Store.
+2. Copie o token de escrita para `BLOB_READ_WRITE_TOKEN`.
+3. Faça um novo deploy depois de salvar a variavel.
 
-## Rotas
+Os arquivos ficam organizados assim:
 
-- `/` tela publica de confirmacao
+- `codes/` arquivos JSON dos codigos
+- `registrations/` arquivos JSON das inscricoes
+- `photos/` fotografias enviadas
+
+## Variaveis de ambiente
+
+```env
+BLOB_READ_WRITE_TOKEN=
+ADMIN_PASSWORD=
+SESSION_SECRET=
+NOTION_API_KEY=
+NOTION_DATA_SOURCE_ID=
+```
+
+`NOTION_API_KEY` e `NOTION_DATA_SOURCE_ID` sao opcionais.
+
+## Como entrar no admin
+
+1. Configure `ADMIN_PASSWORD`.
+2. Acesse `/admin`.
+3. Informe a senha.
+
+Depois do login, a sessao fica em cookie seguro assinado no servidor.
+
+## Como criar um codigo
+
+No painel `/admin` voce pode:
+
+- digitar manualmente um codigo de ate 8 caracteres alfanumericos
+- usar o botao `Gerar codigo`
+- desativar um codigo ainda nao utilizado
+
+Um codigo so deixa de estar disponivel depois que a inscricao e salva com sucesso.
+
+## Alterando os campos da inscricao
+
+O ponto principal de configuracao fica em `data/registration-config.js`.
+
+Ali voce pode alterar:
+
+- titulo e textos da tela publica
+- limite do codigo
+- tipos e tamanho maximo da foto
+- lista de campos do formulario
+- obrigatoriedade, label, placeholder e maxLength de cada campo
+
+Na maioria dos casos, basta editar:
+
+- `data/registration-config.js`
+
+Se quiser mudar comportamento visual do admin ou da pagina publica:
+
+- `public/script.js`
+- `public/admin.js`
+- `public/styles.css`
+
+## Como configurar o Notion
+
+A integracao e opcional e acontece depois que a inscricao ja foi salva no Blob.
+
+1. Crie uma integracao interna no Notion e copie a chave para `NOTION_API_KEY`.
+2. Crie uma base e copie o data source id para `NOTION_DATA_SOURCE_ID`.
+3. Compartilhe a base com a integracao.
+4. Crie propriedades com estes nomes:
+   - `Nome` como titulo
+   - `Codigo` como rich text
+   - `Telefone` como rich text
+   - `Email` como email
+   - `Cidade` como rich text
+   - `Data de nascimento` como date
+   - `Data da inscricao` como date
+   - `Foto` como url
+   - `Observacoes` como rich text
+
+Se o Notion falhar, a inscricao continua salva normalmente no Blob.
+
+## Como fazer deploy na Vercel
+
+1. Suba o repositorio para o Git.
+2. Importe o projeto na Vercel.
+3. Configure as variaveis de ambiente.
+4. Faça o deploy.
+
+## Rotas principais
+
+- `/` tela publica de inscricao
 - `/admin` painel administrativo
 - `POST /api/validate-code`
-- `POST /api/confirm`
-- `GET /api/confirmations?token=...`
+- `POST /api/register`
+- `GET /api/admin-codes`
+- `GET /api/admin-registrations`
 
-## Desenvolvimento local
-
-Se voce tiver o Vercel CLI:
-
-```bash
-vercel dev
-```
-
-## Gerar novos codigos
+## Gerar lista de codigos fora do painel
 
 ```bash
-node scripts/generate-codes.mjs EJC-2026 50
+node scripts/generate-codes.mjs EJC2 20
 ```
-
-Depois copie a lista gerada e substitua o conteudo de `data/invite-codes.js`.

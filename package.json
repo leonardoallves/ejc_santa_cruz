@@ -2,9 +2,12 @@
   "name": "vercel-ejc",
   "version": "1.0.0",
   "private": true,
-  "description": "Mini sistema de confirmacao de cadastro com codigos pre-gerados para deploy no Vercel.",
+  "description": "Sistema simples de inscricoes com codigo unico, Vercel Blob e painel administrativo.",
   "scripts": {
     "dev": "vercel dev",
     "start": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.8.0"
   }
 }

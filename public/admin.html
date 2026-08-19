@@ -3,60 +3,130 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Painel de Confirmacoes EJC</title>
+    <title>Admin EJC</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <main class="page-shell">
       <section class="hero-card">
-        <p class="eyebrow">Painel administrativo</p>
-        <h1>Consultar confirmacoes</h1>
-        <p class="hero-text">
-          Informe o token administrativo para visualizar os cadastros
-          confirmados.
-        </p>
+        <div class="split-header">
+          <div>
+            <p class="eyebrow">Painel administrativo</p>
+            <h1>Gerencie codigos e inscricoes</h1>
+            <p class="hero-text">
+              Entre com a senha administrativa para criar codigos, acompanhar uso e consultar cada inscricao.
+            </p>
+          </div>
+          <button id="logout-button" class="secondary-button hidden" type="button">Sair</button>
+        </div>
 
-        <form id="admin-form" class="stack">
-          <label for="admin-token">Token administrativo</label>
+        <form id="admin-login-form" class="stack">
+          <label for="admin-password">Senha administrativa</label>
           <div class="inline-form">
             <input
-              id="admin-token"
-              name="token"
+              id="admin-password"
+              name="password"
               type="password"
-              placeholder="Seu ADMIN_TOKEN"
+              placeholder="Sua ADMIN_PASSWORD"
               required
             />
-            <button type="submit">Carregar</button>
+            <button id="login-button" type="submit">Entrar</button>
           </div>
         </form>
 
         <div id="admin-feedback" class="feedback" aria-live="polite"></div>
       </section>
 
-      <section class="table-card">
-        <div class="table-header">
-          <h2>Confirmacoes</h2>
-          <span id="admin-summary" class="muted">Nenhum dado carregado.</span>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Codigo</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Grupo</th>
-                <th>Data</th>
-              </tr>
-            </thead>
-            <tbody id="confirmations-body">
-              <tr>
-                <td colspan="6" class="empty-state">Aguardando consulta.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <section id="admin-content" class="hidden admin-grid">
+        <section class="table-card">
+          <div class="table-header">
+            <div>
+              <h2>Codigos</h2>
+              <span id="codes-summary" class="muted">Nenhum codigo carregado.</span>
+            </div>
+          </div>
+
+          <div class="admin-actions">
+            <form id="create-code-form" class="inline-form">
+              <input
+                id="new-code"
+                name="code"
+                type="text"
+                placeholder="Digite um codigo"
+                maxlength="8"
+                required
+              />
+              <button type="submit">Criar codigo</button>
+            </form>
+            <button id="generate-code-button" class="secondary-button" type="button">
+              Gerar codigo
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Status</th>
+                  <th>Criado em</th>
+                  <th>Acao</th>
+                </tr>
+              </thead>
+              <tbody id="codes-body">
+                <tr>
+                  <td colspan="4" class="empty-state">Aguardando autenticacao.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="table-card">
+          <div class="table-header">
+            <div>
+              <h2>Inscricoes</h2>
+              <span id="registrations-summary" class="muted">Nenhum registro carregado.</span>
+            </div>
+            <button id="export-button" class="secondary-button" type="button">Exportar JSON</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Nome</th>
+                  <th>Telefone</th>
+                  <th>Data</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="registrations-body">
+                <tr>
+                  <td colspan="5" class="empty-state">Aguardando autenticacao.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="registration-detail-card" class="form-card hidden">
+          <div class="table-header">
+            <div>
+              <h2>Detalhes da inscricao</h2>
+              <span id="detail-code" class="muted"></span>
+            </div>
+            <button id="download-registration-button" class="secondary-button" type="button">
+              Baixar JSON
+            </button>
+          </div>
+
+          <div id="registration-detail" class="detail-grid"></div>
+          <div id="detail-photo-wrap" class="photo-preview hidden">
+            <img id="detail-photo" alt="Foto do inscrito" />
+          </div>
+        </section>
       </section>
     </main>
 
